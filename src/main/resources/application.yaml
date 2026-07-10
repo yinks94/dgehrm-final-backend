@@ -10,9 +10,19 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
   h2:
     console:
       enabled: true
       path: /h2-console
       settings:
         web-allow-others: true
+app:
+  jwt:
+    issuer: springboot-backend
+    secret: ${JWT_SECRET:c3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktbXVzdC1iZS1hdC1sZWFzdC0zMi1ieXRlcw==}
+    access-token-expiration-seconds: 1800
+    refresh-token-expiration-seconds: 1209600

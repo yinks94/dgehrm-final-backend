@@ -1,4 +1,4 @@
-package kr.ink94.dgehrm;
+package kr.ink94;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

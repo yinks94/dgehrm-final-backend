@@ -18,14 +18,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint{
 
-
   private final ObjectMapper objectMapper = new ObjectMapper();
 
-
   @Override
-  public void commence(HttpServletRequest request, 
-    HttpServletResponse response, 
-    AuthenticationException authException)
+  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
       throws IOException, ServletException {
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());

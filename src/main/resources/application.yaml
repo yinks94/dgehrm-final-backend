@@ -26,3 +26,16 @@ app:
     secret: ${JWT_SECRET:c3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktbXVzdC1iZS1hdC1sZWFzdC0zMi1ieXRlcw==}
     access-token-expiration-seconds: 1800
     refresh-token-expiration-seconds: 1209600
+  cors:
+    allowed-origin-patterns:
+      - ${CORS_ALLOWED_ORIGIN_PATTERN:http://localhost:*}
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - PATCH
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - "*"
+    allow-credentials: true

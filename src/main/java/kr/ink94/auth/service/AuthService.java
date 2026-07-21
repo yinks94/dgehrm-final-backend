@@ -3,7 +3,7 @@ package kr.ink94.auth.service;
 import kr.ink94.auth.dto.LoginResponse;
 import kr.ink94.auth.dto.LoginUserResponse;
 import kr.ink94.global.config.JwtProperties;
-import kr.ink94.member.domain.Member;
+import kr.ink94.member.entity.Member;
 import kr.ink94.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 

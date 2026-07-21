@@ -16,8 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import kr.ink94.member.domain.Member;
-import kr.ink94.member.domain.Role;
+import kr.ink94.member.entity.Member;
+import kr.ink94.member.entity.Role;
 import kr.ink94.member.repository.MemberRepository;
 
 @ExtendWith(MockitoExtension.class)

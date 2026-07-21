@@ -1,4 +1,4 @@
-package kr.ink94.member.domain;
+package kr.ink94.member.entity;
 
 public enum Role {
   ROLE_METRO_MASTER,

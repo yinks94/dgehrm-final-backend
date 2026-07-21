@@ -8,8 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import kr.ink94.member.entity.Member;
 import kr.ink94.member.repository.MemberRepository;
-import kr.ink94.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
 @Service

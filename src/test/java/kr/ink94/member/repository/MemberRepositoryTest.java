@@ -12,8 +12,8 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 
-import kr.ink94.member.domain.Member;
-import kr.ink94.member.domain.Role;
+import kr.ink94.member.entity.Member;
+import kr.ink94.member.entity.Role;
 
 @DataJpaTest
 class MemberRepositoryTest {

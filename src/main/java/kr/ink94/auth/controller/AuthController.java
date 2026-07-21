@@ -18,7 +18,7 @@ import kr.ink94.global.dto.ApiResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("${app.api.base-path:/api/v1}/auth")
 @RequiredArgsConstructor
 public class AuthController {
 

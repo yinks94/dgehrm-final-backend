@@ -21,6 +21,8 @@ spring:
       settings:
         web-allow-others: true
 app:
+  api:
+    base-path: /api/v1
   jwt:
     issuer: springboot-backend
     secret: ${JWT_SECRET:c3ByaW5nLWJvb3Qtand0LXNlY3JldC1rZXktbXVzdC1iZS1hdC1sZWFzdC0zMi1ieXRlcw==}

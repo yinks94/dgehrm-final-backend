@@ -1,3 +1,12 @@
+INSERT INTO members(
+    member_id, username, password, role,
+    created_at, modified_at
+) VALUES
+('metro_master', '시관리자', '$2a$10$w3U/l3DqK7Qj4Wf8wFzgOOZqBvP6C5O0j5oA9o3w5x2y8z1a2b3c4', 'ROLE_METRO_MASTER', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('region_master', '지역관리자', '$2a$10$w3U/l3DqK7Qj4Wf8wFzgOOZqBvP6C5O0j5oA9o3w5x2y8z1a2b3c4', 'ROLE_REGION_MASTER', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('metro_app', '시배정자', '$2a$10$w3U/l3DqK7Qj4Wf8wFzgOOZqBvP6C5O0j5oA9o3w5x2y8z1a2b3c4', 'ROLE_METRO_APP', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+('region_app', '지역배정자', '$2a$10$w3U/l3DqK7Qj4Wf8wFzgOOZqBvP6C5O0j5oA9o3w5x2y8z1a2b3c4', 'ROLE_REGION_APP', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
 INSERT INTO subjects (
     subject_id, short_name, full_name, kind,
     enabled, apply_cho, can_transfer, want_count, sort,

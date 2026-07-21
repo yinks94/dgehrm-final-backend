@@ -1,7 +1,19 @@
+//Flyway Gradle 플러그인은 buildscript 클래스패스에서 별도로 드라이버를 찾으므로 여기에 추가
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.flywaydb:flyway-mysql:12.4.0'
+		classpath 'org.mariadb.jdbc:mariadb-java-client:3.5.1'
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.1.0'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.flywaydb.flyway' version '12.4.0'
 }
 
 group = 'kr.ink94'
@@ -33,6 +45,9 @@ dependencies {
   	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
 
+	//.env 파일을 환경변수로 로드
+	implementation 'me.paulschwarz:spring-dotenv:5.1.0'
+
 	//flyway 설정
 	implementation 'org.flywaydb:flyway-core'
 	runtimeOnly 'org.flywaydb:flyway-mysql'
@@ -61,7 +76,31 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
 }
 
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = 'UTF-8'
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
+	jvmArgs '-Dfile.encoding=UTF-8', '-Dstdout.encoding=UTF-8', '-Dstderr.encoding=UTF-8'
+}
+
+//.env 파일에서 DB 접속 정보를 읽어 Flyway Gradle 플러그인에 전달
+def dotenv = new Properties()
+def envFile = file('.env')
+if (envFile.exists()) {
+	envFile.withInputStream { dotenv.load(it) }
+}
+def dbPort = dotenv.getProperty('MARIADB_PORT') ?: System.getenv('MARIADB_PORT') ?: '3306'
+def dbName = dotenv.getProperty('MARIADB_DATABASE') ?: System.getenv('MARIADB_DATABASE') ?: 'dgehrm_final'
+def dbUser = dotenv.getProperty('MARIADB_USER') ?: System.getenv('MARIADB_USER') ?: 'dgehrm'
+def dbPassword = dotenv.getProperty('MARIADB_PASSWORD') ?: System.getenv('MARIADB_PASSWORD') ?: 'dgehrm!@#$'
+
+flyway {
+	url = "jdbc:mariadb://localhost:${dbPort}/${dbName}?characterEncoding=UTF-8"
+	user = dbUser
+	password = dbPassword
+	locations = ['classpath:db/migration']
+	baselineOnMigrate = true
+	cleanDisabled = false
 }

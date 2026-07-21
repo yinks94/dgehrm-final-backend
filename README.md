@@ -4,6 +4,7 @@
 ```bash
 backend>docker compose up -d    #docker 실행
 backend>docker compose down     #docker 중지
+backend>docker compose down -v  #docker 중지 & docker 이미지 삭제
 backend>docker compose ps       #docker 상태 확인
 backend>docker exec -it dgehrm-mariadb mariadb -u dgehrm -p  dgehrm_final       # mariadb console 접속
 ```

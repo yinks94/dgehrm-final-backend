@@ -10,10 +10,11 @@ backend>docker exec -it dgehrm-mariadb mariadb -u dgehrm -p  dgehrm_final       
 
 ## flyway 설정확인
 ```bash
-./gradlew flywayInfo      # 마이그레이션 적용 현황 확인 (Pending/Success)
-./gradlew flywayMigrate   # DB 초기화 — 대기 중인 마이그레이션(V1, V2 등) 적용
-./gradlew flywayValidate  # 적용된 마이그레이션과 파일 정합성 검증
-./gradlew flywayClean flywayMigrate   # DB를 완전히 비우고 처음부터 재적용 (파괴적 — 로컬 개발 DB에서만 사용)
+>gradle flywayInfo      # 마이그레이션 적용 현황 확인 (Pending/Success)
+>gradle flywayMigrate   # DB 초기화 — 대기 중인 마이그레이션(V1, V2 등) 적용
+>gradle flywayValidate  # 적용된 마이그레이션과 파일 정합성 검증
+>gradle flywayRepair    # 적용된 마이그레이션과 파일 정합성 검증
+>gradle flywayClean     # DB를 완전히 비우고 처음부터 재적용 (파괴적 — 로컬 개발 DB에서만 사용)
 
 ```
 

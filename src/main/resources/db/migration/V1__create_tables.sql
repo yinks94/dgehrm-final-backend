@@ -9,13 +9,13 @@ CREATE TABLE members (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT uk_members_member_id UNIQUE (member_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 2. 교과목 테이블
 CREATE TABLE subjects (
     subject_id BIGINT NOT NULL,
-    short_name VARCHAR(20) NOT NULL,
-    full_name VARCHAR(20) NOT NULL,
+    short_name VARCHAR(50) NOT NULL, 
+    full_name VARCHAR(100) NOT NULL, 
     kind VARCHAR(30) NOT NULL,
     neis_code VARCHAR(20) NULL,
     neis_middle VARCHAR(20) NULL,
@@ -27,9 +27,10 @@ CREATE TABLE subjects (
     sort BIGINT NULL DEFAULT 0,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     modified_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
     CONSTRAINT pk_subjects PRIMARY KEY (subject_id),
     CONSTRAINT uk_subjects_short_name UNIQUE (short_name),
-    CONSTRAINT uk_subjects_full_name UNIQUE (full_name),
+    CONSTRAINT uk_subjects_full_name UNIQUE (full_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 3. 교과목 과목 시퀀스 테이블

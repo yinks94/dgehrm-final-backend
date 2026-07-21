@@ -45,8 +45,11 @@ dependencies {
   	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 	implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
 
-	//.env 파일을 환경변수로 로드
-	implementation 'me.paulschwarz:spring-dotenv:5.1.0'
+	//.env 파일을 환경변수로 로드 (로컬 개발/테스트 전용, developmentOnly는 test 클래스패스에 포함되지 않아 별도 추가)
+	developmentOnly 'me.paulschwarz:springboot4-dotenv:5.1.0'
+	testImplementation 'me.paulschwarz:springboot4-dotenv:5.1.0'
+
+	implementation 'org.mariadb.jdbc:mariadb-java-client'
 
 	//flyway 설정
 	implementation 'org.flywaydb:flyway-core'
@@ -86,15 +89,25 @@ tasks.named('test') {
 }
 
 //.env 파일에서 DB 접속 정보를 읽어 Flyway Gradle 플러그인에 전달
+// java.util.Properties는 따옴표를 값의 일부로 그대로 읽으므로 dotenv 표기(KEY="value")에 맞춰 양끝 따옴표를 제거
+def stripQuotes = { String value ->
+	if (value == null) {
+		return null
+	}
+	if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+		return value.substring(1, value.length() - 1)
+	}
+	return value
+}
 def dotenv = new Properties()
 def envFile = file('.env')
 if (envFile.exists()) {
 	envFile.withInputStream { dotenv.load(it) }
 }
-def dbPort = dotenv.getProperty('MARIADB_PORT') ?: System.getenv('MARIADB_PORT') ?: '3306'
-def dbName = dotenv.getProperty('MARIADB_DATABASE') ?: System.getenv('MARIADB_DATABASE') ?: 'dgehrm_final'
-def dbUser = dotenv.getProperty('MARIADB_USER') ?: System.getenv('MARIADB_USER') ?: 'dgehrm'
-def dbPassword = dotenv.getProperty('MARIADB_PASSWORD') ?: System.getenv('MARIADB_PASSWORD') ?: 'dgehrm!@#$'
+def dbPort = stripQuotes(dotenv.getProperty('MARIADB_PORT')) ?: System.getenv('MARIADB_PORT') ?: '3306'
+def dbName = stripQuotes(dotenv.getProperty('MARIADB_DATABASE')) ?: System.getenv('MARIADB_DATABASE') ?: 'dgehrm_final'
+def dbUser = stripQuotes(dotenv.getProperty('MARIADB_USER')) ?: System.getenv('MARIADB_USER') ?: 'dgehrm'
+def dbPassword = stripQuotes(dotenv.getProperty('MARIADB_PASSWORD')) ?: System.getenv('MARIADB_PASSWORD') ?: 'dgehrm!@#$'
 
 flyway {
 	url = "jdbc:mariadb://localhost:${dbPort}/${dbName}?characterEncoding=UTF-8"
@@ -103,4 +116,10 @@ flyway {
 	locations = ['classpath:db/migration']
 	baselineOnMigrate = true
 	cleanDisabled = false
+}
+
+
+bootRun {
+    // Gradle bootRun 프로세스가 프로젝트 루트 경로를 올바르게 바라보도록 설정
+    workingDir = rootDir
 }

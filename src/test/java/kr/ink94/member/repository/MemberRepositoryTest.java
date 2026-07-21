@@ -5,21 +5,33 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 
 import kr.ink94.member.entity.Member;
 import kr.ink94.member.entity.Role;
 
+// @DataJpaTest는 기본적으로 datasource를 내장 H2로 치환하므로, Replace.NONE으로
+// application.yaml에 설정된 실제 MariaDB(Flyway로 스키마 적용됨)를 그대로 사용하도록 지정
 @DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class MemberRepositoryTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    // 실제 MariaDB에는 Flyway 시드 데이터(members 4건)가 이미 존재하므로,
+    // 각 테스트를 트랜잭션 롤백 범위 안에서 독립적으로 검증하기 위해 비워둔다
+    @BeforeEach
+    void setUp() {
+        memberRepository.deleteAll();
+    }
 
     @Test
     @DisplayName("memberId로 회원을 조회한다")

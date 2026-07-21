@@ -1,11 +1,6 @@
 spring:
   application:
     name: dgehrm
-  #  datasource:
-  #    url: jdbc:h2:mem:dgehrm-final
-  #    driver-class-name: org.h2.Driver
-  #    username: sa
-  #    password:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:${MARIADB_PORT:3306}/${MARIADB_DATABASE:dbname}?maxPoolSize=20&characterEncoding=UTF-8
@@ -18,13 +13,14 @@ spring:
       max-lifetime: 1800000 # 30분 (MariaDB wait_timeout보다 무조건 짧아야 함!)
       connection-timeout: 3000 # 3초
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.MariaDBDialect
     hibernate:
       ddl-auto: validate
     open-in-view: false
     properties:
       hibernate:
         format_sql: true
+        show_sql: true
   #h2:
   #  console:
   #    enabled: true
@@ -33,7 +29,7 @@ spring:
   #      web-allow-others: true
   flyway:
     enabled: true
-    clean-disabled: false    # clean 기능 활성화
+    clean-disabled: false # clean 기능 활성화
     locations: classpath:db/migration
     baseline-on-migrate: true
 app:

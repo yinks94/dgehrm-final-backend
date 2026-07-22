@@ -1,5 +1,9 @@
 # 1. OpenJDK 21 slim 경량화 이미지 사용
-FROM openjdk:21-slim
+# FROM openjdk:21-slim
+
+# 기존: FROM openjdk:21-slim (오류 발생)
+# 변경: Temurin OpenJDK 21 기반 이미지
+FROM eclipse-temurin:21-jdk
 
 # 2. 작업 디렉토리 생성 및 이동
 WORKDIR /app

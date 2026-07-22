@@ -1,0 +1,88 @@
+name: CI/CD Pipeline via GHCR (OpenJDK 21)
+
+on:
+  push:
+    branches: [ "main" ]
+
+# GHCR 업로드 권한 설정
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. GitHub 저장소의 소스코드 가져오기
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. OpenJDK 21 환경 설정
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # 3. Gradle 실행 권한 부여
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # 4. Gradle 빌드 (테스트 실행 원할 경우 -x test 구문 제거)
+      - name: Build with Gradle
+        run: ./gradlew clean build -x test
+
+      # 5. GHCR (GitHub Container Registry) 로그인
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 6. Docker 이미지 빌드 및 GHCR 푸시
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          # GHCR의 태그 규칙: ghcr.io/계정명/리포지토리명:latest
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/dgehrm-final-backend:latest
+
+      # 7. 우분투 홈 서버로 SSH 접속 후 배포 진행
+      - name: Deploy to Home Server
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/dgehrm-final-backend:latest
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          password: ${{ secrets.SERVER_PASSWORD }}
+          port: ${{ secrets.SERVER_PORT }}
+          envs: IMAGE_NAME
+          script: |
+            # 대문자가 포함된 경우 소문자로 자동 변환 (GHCR 필수 조건)
+            LOWER_IMAGE=$(echo "$IMAGE_NAME" | tr '[:upper:]' '[:lower:]')
+
+            # 1. 홈 서버에서 GHCR 로그인
+            echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+            
+            # 2. GHCR에서 최신 Docker 이미지 Pull
+            docker pull $LOWER_IMAGE
+            
+            # 3. 기존에 실행 중인 동일 컨테이너 중지 및 삭제
+            docker stop dgehrm-backend || true
+            docker rm dgehrm-backend || true
+            
+            # 4. OpenJDK 21 기반 새 컨테이너 실행
+            docker run -d \
+              --name dgehrm-backend \
+              -p 8080:8080 \
+              --restart always \
+              $LOWER_IMAGE
+            
+            # 5. 불필요한 구버전 이미지 정돈
+            docker image prune -f

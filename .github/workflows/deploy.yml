@@ -81,6 +81,7 @@ jobs:
             docker run -d \
               --name dgehrm-backend \
               -p 8080:8080 \
+              --env-file /home/${{ secrets.SERVER_USERNAME }}/.env \
               --restart always \
               $LOWER_IMAGE
             

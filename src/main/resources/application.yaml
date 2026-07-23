@@ -1,11 +1,11 @@
 spring:
   application:
-    name: dgehrm
+    name: dgehrm-backend
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:${MARIADB_PORT:3306}/${MARIADB_DATABASE:dbname}?maxPoolSize=20&characterEncoding=UTF-8
-    username: ${MARIADB_USER:dbuser}
-    password: ${MARIADB_PASSWORD:1234}
+    url: jdbc:mariadb://localhost:${MARIADB_PORT:3306}/${MARIADB_DATABASE:dgehrm_final}?maxPoolSize=20&characterEncoding=UTF-8
+    username: ${MARIADB_USER:dgehrm}
+    password: ${MARIADB_PASSWORD:dgehrm!@#$}
     hikari:
       maximum-pool-size: 10 # TPS 및 서버 스펙에 따라 조정 (기본 10)
       minimum-idle: 10
